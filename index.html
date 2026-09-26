@@ -14,6 +14,9 @@
      ================================================================ -->
 <meta name="app-store-url" content="">
 
+<!-- Where the QR code leads. Change this link to point the QR code somewhere else. -->
+<meta name="qr-url" content="https://x.com/SpencerBrown0/status/2051746143005286471">
+
 <!-- Optional: Safari's built-in "Get" banner on iPhone.
      Use the digits after "id" in your App Store link, then remove the comment marks. -->
 <!-- <meta name="apple-itunes-app" content="app-id=1234567890"> -->
@@ -143,6 +146,7 @@ h1 .dot{color:var(--red-hi);-webkit-text-fill-color:var(--red-hi)}
 .qr-card{background:#fff;border-radius:28px;padding:16px 16px 12px;color:var(--qr-ink);transition:transform .5s var(--ease)}
 .qr-card.pulse{animation:pulse .9s var(--ease)}
 @keyframes pulse{0%{transform:scale(1)}35%{transform:scale(1.045)}100%{transform:scale(1)}}
+.qr-link{display:block;border-radius:6px;-webkit-tap-highlight-color:transparent}
 #qr{width:176px;height:176px;color:var(--qr-ink)}
 #qr svg{display:block;width:100%;height:100%}
 .qr-cap{margin-top:8px;font-size:12px;font-weight:600;color:#3D4868;letter-spacing:.01em;display:flex;align-items:center;justify-content:center;gap:6px}
@@ -310,7 +314,7 @@ footer{border-top:1px solid var(--line);padding:30px 20px calc(40px + env(safe-a
       <div class="get rise d4" id="get">
         <div class="qr-ring">
           <div class="qr-card" id="qrCard">
-            <div id="qr" role="img" aria-label="QR code: download Super Intelligence on the App Store"></div>
+            <a id="qrLink" class="qr-link" href="https://x.com/SpencerBrown0/status/2051746143005286471" target="_blank" rel="noopener" aria-label="QR code: open Spencer Brown's post on X"><div id="qr"></div></a>
             <p class="qr-cap"><svg aria-hidden="true"><use href="#phone"/></svg><span class="d">Scan with your iPhone</span><span class="m">Show a friend</span></p>
           </div>
         </div>
@@ -442,7 +446,12 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
     el.innerHTML = svg + "</svg>";
     el.setAttribute("data-url", text);
   }
-  buildQR(d.getElementById("qr"), hasStore ? store : SITE);
+  var qrMeta = d.querySelector('meta[name="qr-url"]');
+  var qrUrl = ((qrMeta && qrMeta.getAttribute("content")) || "").trim();
+  if (!/^https?:\/\//i.test(qrUrl)) qrUrl = hasStore ? store : SITE;
+  var qrLink = d.getElementById("qrLink");
+  if (qrLink) qrLink.href = qrUrl;
+  buildQR(d.getElementById("qr"), qrUrl);
 
   /* ---------- 50-star crest ---------- */
   var crest = d.getElementById("crest");
